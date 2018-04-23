@@ -13,10 +13,11 @@ public class Packer {
         this.outputFile = outputFile;
         this.inputFile = inputFile;
     }
+
     public void start() throws IOException {
         in = new BufferedReader(new FileReader(inputFile));
         if (outputFile == null) {
-            out = new BufferedWriter(new FileWriter(inputFile + ".rle"));
+            out = new BufferedWriter(new FileWriter(inputFile + ".txt"));
         } else {
             out = new BufferedWriter(new FileWriter(outputFile));
         }
@@ -37,7 +38,7 @@ public class Packer {
         while (symbol != -1) {
             saveSymbol = symbol;
             symbol = in.read();
-            if(saveSymbol == symbol){
+            if(saveSymbol == symbol && symbol > 32){
                 count++;
             }
             else{
@@ -59,7 +60,7 @@ public class Packer {
         int symbol = in.read();
         int count = 0;
         while (symbol != -1){
-            if(symbol >48 & symbol< 58){
+            if(symbol >47 & symbol< 58){
                 count = count * 10 + symbol - 48;
             }else{
                 if(symbol < 33){

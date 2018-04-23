@@ -29,7 +29,5 @@ public class PackRLE {
         }catch(IOException e){
             System.err.println(e.getMessage());
         }
-
-
     }
 }
