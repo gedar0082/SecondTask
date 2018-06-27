@@ -1,15 +1,13 @@
 import java.io.*;
 
 public class Packer {
-    private boolean packFlag;
-    private boolean unpackFlag;
-    private String outputFile;
-    private String inputFile;
+    private boolean flag;
+    private File outputFile;
+    private File inputFile;
     BufferedWriter out;
     BufferedReader in;
-    public Packer(boolean packFlag, boolean unpackFlag, String outputFile, String inputFile) {
-        this.packFlag = packFlag;
-        this.unpackFlag = unpackFlag;
+    public Packer(boolean flag, File outputFile, File inputFile) {
+        this.flag = flag;
         this.outputFile = outputFile;
         this.inputFile = inputFile;
     }
@@ -17,14 +15,17 @@ public class Packer {
     public void start() throws IOException {
         in = new BufferedReader(new FileReader(inputFile));
         if (outputFile == null) {
-            out = new BufferedWriter(new FileWriter(inputFile + ".txt"));
+            if(flag){
+                out = new BufferedWriter(new FileWriter("packed" + inputFile));
+            }else{
+                out = new BufferedWriter(new FileWriter("unpacked" + inputFile));
+            }
         } else {
             out = new BufferedWriter(new FileWriter(outputFile));
         }
-        if (packFlag && unpackFlag) throw new IllegalArgumentException();
-        if (packFlag) {
+        if (flag) {
             pack();
-        } else if (unpackFlag) {
+        } else if (!flag) {
             unpack();
         } else {
             throw new IllegalArgumentException();
@@ -38,18 +39,18 @@ public class Packer {
         while (symbol != -1) {
             saveSymbol = symbol;
             symbol = in.read();
-            if(saveSymbol == symbol && symbol > 32){
+            if(saveSymbol == symbol){
                 count++;
+                if(count > 255){
+                    out.write(count);
+                    out.write(saveSymbol);
+                    count = 0;
+                }
             }
             else{
-                if(count > 1){
-                    out.append(count + "");
-                    out.append((char)saveSymbol + "");
-                    count = 1;
-                }else{
-                    out.append((char)saveSymbol + "");
-                    count = 1;
-                }
+                out.write(count);
+                out.write(saveSymbol);
+                count = 1;
             }
         }
         in.close();
@@ -58,21 +59,12 @@ public class Packer {
 
     private void unpack() throws IOException {
         int symbol = in.read();
-        int count = 0;
+        int saveSymbol;
         while (symbol != -1){
-            if(symbol >47 & symbol< 58){
-                count = count * 10 + symbol - 48;
-            }else{
-                if(symbol < 33){
-                    out.append((char)symbol);
-                    count = 0;
-                }else{
-                    if(count == 0) count = 1;
-                    for(int c = count; c >0; c--){
-                        out.append((char)symbol);
-                    }
-                    count = 0;
-                }
+            saveSymbol = symbol;
+            symbol = in.read();
+            for(int c = saveSymbol; c > 0; c--){
+                out.append((char)symbol);
             }
             symbol = in.read();
         }
