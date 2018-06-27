@@ -22,7 +22,6 @@ public class PackRLE {
         CmdLineParser parser = new CmdLineParser(this);
         try {
             parser.parseArgument(args);
-
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             System.exit(0);

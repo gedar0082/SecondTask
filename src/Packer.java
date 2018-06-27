@@ -22,6 +22,7 @@ public class Packer {
             }
         } else {
             out = new BufferedWriter(new FileWriter(outputFile));
+
         }
         if (flag) {
             pack();
