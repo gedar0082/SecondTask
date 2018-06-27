@@ -2,8 +2,12 @@ import java.io.*;
 import org.kohsuke.args4j.*;
 public class PackRLE {
     @Option(name = "-z",forbids = "-u", usage = "Packing")
-    private boolean flag;
+    private boolean packFlag;
 
+    @Option(name = "-u", usage = "Packing")
+    private boolean unpackFlag;
+
+    private boolean flag;
 
     @Option(name="-out", usage = "Output file")
     private File outputFile;
@@ -20,24 +24,24 @@ public class PackRLE {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            System.exit(0);
+            System.exit(-1);
 
         }
 
-        /*if (packFlag) {
+        if (packFlag) {
             flag = true;
         } else if (unpackFlag) {
             flag = false;
         } else {
             System.err.println("ERROR");
             System.exit(0);
-        }*/
+        }
         Packer packer = new Packer(flag, outputFile, inputFile);
         try{
             packer.start();
         }catch(IOException e){
             System.err.println(e.getMessage());
-            System.exit(0);
+            System.exit(-1);
 
         }
     }
