@@ -2,12 +2,8 @@ import java.io.*;
 import org.kohsuke.args4j.*;
 public class PackRLE {
     @Option(name = "-z",forbids = "-u", usage = "Packing")
-    private boolean packFlag;
-
-    @Option(name="-u",forbids = "-z",usage = "Unpacking")
-    private boolean unpackFlag;
-
     private boolean flag;
+
 
     @Option(name="-out", usage = "Output file")
     private File outputFile;
@@ -28,14 +24,14 @@ public class PackRLE {
 
         }
 
-        if (packFlag) {
+        /*if (packFlag) {
             flag = true;
         } else if (unpackFlag) {
             flag = false;
         } else {
             System.err.println("ERROR");
             System.exit(0);
-        }
+        }*/
         Packer packer = new Packer(flag, outputFile, inputFile);
         try{
             packer.start();
